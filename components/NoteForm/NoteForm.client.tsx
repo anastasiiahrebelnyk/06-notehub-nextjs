@@ -1,3 +1,5 @@
+'use client';
+
 import { useId } from 'react';
 
 import css from './NoteForm.module.css';
@@ -6,10 +8,11 @@ import type { NoteFormValues } from '../../types/note';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import * as Yup from 'yup';
 import { createNote } from '@/lib/api';
+import Link from 'next/link';
 
-interface NoteFormClientProps {
-  onSuccess: () => void;
-}
+// interface NoteFormClientProps {
+//   onSuccess: () => void;
+// }
 
 const initialValues: NoteFormValues = {
   title: '',
@@ -17,7 +20,7 @@ const initialValues: NoteFormValues = {
   tag: 'Todo',
 };
 
-export default function NoteFormClient({ onSuccess }: NoteFormClientProps) {
+export default function NoteFormClient() {
   const queryClient = useQueryClient();
   const fieldId = useId();
 
@@ -35,7 +38,6 @@ export default function NoteFormClient({ onSuccess }: NoteFormClientProps) {
     onSuccess: data => {
       console.log(data);
       queryClient.invalidateQueries({ queryKey: ['notes'] });
-      onSuccess();
     },
     onError: error => {
       console.log(error);
@@ -99,20 +101,20 @@ export default function NoteFormClient({ onSuccess }: NoteFormClientProps) {
         </div>
 
         <div className={css.actions}>
-          <button
-            type="button"
-            className={css.cancelButton}
-            onClick={onSuccess}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className={css.submitButton}
-            disabled={createNoteM.isPending}
-          >
-            Create note
-          </button>
+          <Link href={'/notes'}>
+            <button type="button" className={css.cancelButton}>
+              Cancel
+            </button>
+          </Link>
+          <Link href={'/notes'}>
+            <button
+              type="submit"
+              className={css.submitButton}
+              disabled={createNoteM.isPending}
+            >
+              Create Note
+            </button>
+          </Link>
         </div>
       </Form>
     </Formik>

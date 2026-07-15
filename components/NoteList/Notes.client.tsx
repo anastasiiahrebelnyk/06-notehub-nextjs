@@ -67,10 +67,9 @@ export default function NoteList({ notes }: NoteListProps) {
             onPageChange={setCurrentPage}
           />
         )}
-        <button className={css.button}>
-          <Link href={'./notes/createNote'}></Link>
-          Create note +
-        </button>
+        <Link href="/notes/createNote">
+          <button className={css.link}>Create note +</button>
+        </Link>
       </div>
       <ul className={css.list}>
         {notesToDisplay.map((note: Note) => (
