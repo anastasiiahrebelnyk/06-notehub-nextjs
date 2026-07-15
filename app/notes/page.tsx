@@ -1,6 +1,12 @@
 import NoteList from '@/components/NoteList/Notes.client';
-import Pagination from '@/components/Pagination/Pagination';
 import { fetchNotes } from '@/lib/api';
+import { Note } from '@/types/note';
+
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
 
 // interface NoteProps {
 //   page: number;
@@ -11,14 +17,24 @@ import { fetchNotes } from '@/lib/api';
 //   const response = await fetchNotes(page, search);
 //   return <NoteList notes={response.notes} />;
 // }
-export default async function Note() {
-  const response = await fetchNotes();
+// interface NoteProps {
+//   notes: Note[];
+// }
+
+export default async function Notes() {
+  const queryClient = new QueryClient();
+  const response = await queryClient.fetchQuery({
+    queryKey: ['notes'],
+    queryFn: () => fetchNotes(1, undefined),
+  });
   return (
     <>
-      {/* <Pagination totalPages={totalPages}
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        {/* <Pagination totalPages={totalPages}
             currentPage={currentPage}
             onPageChange={setCurrentPage}> */}
-      <NoteList notes={response.notes} />
+        <NoteList notes={response.notes} />
+      </HydrationBoundary>
     </>
   );
 }

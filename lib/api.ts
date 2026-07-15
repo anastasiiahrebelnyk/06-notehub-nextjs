@@ -13,27 +13,15 @@ export interface NoteHTTPResponse {
 
 const API = axios.create({ baseURL: 'https://notehub-public.goit.study/api' });
 
-// export const fetchNotes = async (
-//   page: number,
-//   search: string | undefined
-// ): Promise<NoteHTTPResponse> => {
-//   const res = await axios.get<NoteHTTPResponse>('/notes', {
-//     params: {
-//       page,
-//       perPage: 12,
-//       search,
-//     },
-//     headers: {
-//       Authorization: `Bearer ${API_KEY}`,
-//     },
-//   });
-//   return res.data;
-// };
-
-export const fetchNotes = async (): Promise<NoteHTTPResponse> => {
+export const fetchNotes = async (
+  page: number,
+  search: string | undefined
+): Promise<NoteHTTPResponse> => {
   const res = await API.get<NoteHTTPResponse>('/notes', {
     params: {
+      page,
       perPage: 12,
+      search,
     },
     headers: {
       Authorization: `Bearer ${API_KEY}`,
@@ -41,6 +29,18 @@ export const fetchNotes = async (): Promise<NoteHTTPResponse> => {
   });
   return res.data;
 };
+
+// export const fetchNotes = async (): Promise<NoteHTTPResponse> => {
+//   const res = await API.get<NoteHTTPResponse>('/notes', {
+//     params: {
+//       perPage: 12,
+//     },
+//     headers: {
+//       Authorization: `Bearer ${API_KEY}`,
+//     },
+//   });
+//   return res.data;
+// };
 
 export const getNote = async (id: Note['id']): Promise<Note> => {
   const res = await API.get<Note>(`/notes/${id}`, {

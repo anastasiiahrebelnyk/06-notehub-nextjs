@@ -2,15 +2,32 @@
 
 import { Note } from '@/types/note';
 import css from './Notes.module.css';
-import { deleteNote, getNote } from '@/lib/api';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deleteNote, fetchNotes } from '@/lib/api';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
+import SearchBox from '../SearchBox/SearchBox';
+import Pagination from '../Pagination/Pagination';
 
 interface NoteListProps {
   notes: Note[];
 }
 export default function NoteList({ notes }: NoteListProps) {
+  const [search, setSearch] = useState<string | undefined>(undefined);
+  const [currentPage, setCurrentPage] = useState(1);
   const queryClient = useQueryClient();
+
+  const handleSearch = useDebouncedCallback((search: string) => {
+    setSearch(search);
+    setCurrentPage(1);
+  }, 1000);
+
   const deleteNoteM = useMutation({
     mutationFn: deleteNote,
     onSuccess: () => {
@@ -25,33 +42,59 @@ export default function NoteList({ notes }: NoteListProps) {
     deleteNoteM.mutate(note.id);
   };
 
+  // const totalPages = data?.totalPages ?? 0;
   //   const handleClick = (note: Note) => {
   //     console.log(note.id);
   //   };
+  const { data, isSuccess } = useQuery({
+    queryKey: ['notes', search, currentPage],
+    queryFn: () => fetchNotes(currentPage, search),
+    // placeholderData: keepPreviousData,
+    keepPreviousData: true,
+  });
+
+  const notesToDisplay = data?.notes ?? notes;
+  const totalPages = data?.totalPages ?? 0;
 
   return (
-    <ul className={css.list}>
-      {notes.map(note => (
-        <li key={note.id} className={css.listItem}>
-          <h2 className={css.title}>{note.title}</h2>
-          <p className={css.content}>{note.content}</p>
-          <div className={css.footer}>
-            <span className={css.tag}>{note.tag}</span>
-            <button className={css.link}>
-              <Link href={`/notes/${note.id}`}>View details</Link>
-            </button>
-            <button
-              className={css.button}
-              onClick={() => {
-                handleClick(note);
-              }}
-              disabled={deleteNoteM.isPending}
-            >
-              Delete
-            </button>
-          </div>
-        </li>
-      ))}
-    </ul>
+    <>
+      <div className={css.toolbar}>
+        <SearchBox onSearch={handleSearch} />
+        {isSuccess && totalPages > 1 && (
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
+        )}
+        <button className={css.button}>
+          <Link href={'./notes/createNote'}></Link>
+          Create note +
+        </button>
+      </div>
+      <ul className={css.list}>
+        {notesToDisplay.map((note: Note) => (
+          <li key={note.id} className={css.listItem}>
+            <h2 className={css.title}>{note.title}</h2>
+            <p className={css.content}>{note.content}</p>
+            <div className={css.footer}>
+              <span className={css.tag}>{note.tag}</span>
+              <button className={css.link}>
+                <Link href={`/notes/${note.id}`}>View details</Link>
+              </button>
+              <button
+                className={css.button}
+                onClick={() => {
+                  handleClick(note);
+                }}
+                disabled={deleteNoteM.isPending}
+              >
+                Delete
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
