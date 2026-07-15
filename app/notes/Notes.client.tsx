@@ -3,17 +3,12 @@
 import { Note } from '@/types/note';
 import css from './Notes.module.css';
 import { deleteNote, fetchNotes } from '@/lib/api';
-import {
-  keepPreviousData,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-import SearchBox from '../SearchBox/SearchBox';
-import Pagination from '../Pagination/Pagination';
+import SearchBox from '../../components/SearchBox/SearchBox';
+import Pagination from '../../components/Pagination/Pagination';
 
 interface NoteListProps {
   notes: Note[];
@@ -46,7 +41,7 @@ export default function NoteList({ notes }: NoteListProps) {
   //   const handleClick = (note: Note) => {
   //     console.log(note.id);
   //   };
-  const { data, isSuccess } = useQuery({
+  const { data, isSuccess, isLoading } = useQuery({
     queryKey: ['notes', search, currentPage],
     queryFn: () => fetchNotes(currentPage, search),
     // placeholderData: keepPreviousData,
@@ -58,6 +53,7 @@ export default function NoteList({ notes }: NoteListProps) {
 
   return (
     <>
+      {isLoading && <p>Loading, please wait...</p>}
       <div className={css.toolbar}>
         <SearchBox onSearch={handleSearch} />
         {isSuccess && totalPages > 1 && (

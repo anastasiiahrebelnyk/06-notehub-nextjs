@@ -42,7 +42,7 @@ export const fetchNotes = async (
 //   return res.data;
 // };
 
-export const getNote = async (id: Note['id']): Promise<Note> => {
+export const fetchNoteById = async (id: Note['id']): Promise<Note> => {
   const res = await API.get<Note>(`/notes/${id}`, {
     headers: {
       Authorization: `Bearer ${API_KEY}`,
