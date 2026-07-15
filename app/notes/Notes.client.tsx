@@ -45,7 +45,8 @@ export default function NoteList({ notes }: NoteListProps) {
     queryKey: ['notes', search, currentPage],
     queryFn: () => fetchNotes(currentPage, search),
     // placeholderData: keepPreviousData,
-    keepPreviousData: true,
+    // keepPreviousData: true,
+    placeholderData: prev => prev,
   });
 
   const notesToDisplay = data?.notes ?? notes;
