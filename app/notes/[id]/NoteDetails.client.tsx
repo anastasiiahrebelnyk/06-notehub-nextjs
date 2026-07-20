@@ -22,7 +22,7 @@ export default function NoteDetailsClient() {
   return (
     <>
       {noteQ.isLoading && <p>Loading, please wait...</p>}
-      {noteQ.isError && !noteQ && <p>Something went wrong.</p>}
+      {noteQ.isError && <p>Something went wrong.</p>}
       {noteQ.isSuccess && (
         <main className={css.main}>
           <div className={css.container}>

@@ -1,7 +1,6 @@
 'use client';
 
 import { useId } from 'react';
-import { useRouter } from 'next/navigation';
 import css from './NoteForm.module.css';
 import { ErrorMessage, Field, Form, Formik, type FormikHelpers } from 'formik';
 import type { NoteFormValues } from '../../types/note';
@@ -10,9 +9,9 @@ import * as Yup from 'yup';
 import { createNote } from '@/lib/api';
 import Link from 'next/link';
 
-// interface NoteFormClientProps {
-//   onSuccess: () => void;
-// }
+interface NoteFormProps {
+  onSuccess: () => void;
+}
 
 const initialValues: NoteFormValues = {
   title: '',
@@ -20,8 +19,7 @@ const initialValues: NoteFormValues = {
   tag: 'Todo',
 };
 
-export default function NoteFormClient() {
-  const router = useRouter();
+export default function NoteForm({ onSuccess }: NoteFormProps) {
   const queryClient = useQueryClient();
   const fieldId = useId();
 
@@ -39,7 +37,6 @@ export default function NoteFormClient() {
     onSuccess: data => {
       console.log(data);
       queryClient.invalidateQueries({ queryKey: ['notes'] });
-      router.push('/notes');
     },
     onError: error => {
       console.log(error);
@@ -53,6 +50,7 @@ export default function NoteFormClient() {
     console.log(values);
     createNoteM.mutate(values);
     actions.resetForm();
+    onSuccess();
   };
 
   return (
@@ -103,11 +101,14 @@ export default function NoteFormClient() {
         </div>
 
         <div className={css.actions}>
-          <Link href={'/notes'}>
-            <button type="button" className={css.cancelButton}>
-              Cancel
-            </button>
-          </Link>
+          <button
+            type="button"
+            className={css.cancelButton}
+            onClick={onSuccess}
+          >
+            Cancel
+          </button>
+
           <button
             type="submit"
             className={css.submitButton}

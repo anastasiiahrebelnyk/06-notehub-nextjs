@@ -75,9 +75,9 @@ export default function NoteList({ notes }: NoteListProps) {
             <p className={css.content}>{note.content}</p>
             <div className={css.footer}>
               <span className={css.tag}>{note.tag}</span>
-              <button className={css.link}>
-                <Link href={`/notes/${note.id}`}>View details</Link>
-              </button>
+              <Link href={`/notes/${note.id}`}>
+                <button className={css.link}>View details</button>
+              </Link>
               <button
                 className={css.button}
                 onClick={() => {

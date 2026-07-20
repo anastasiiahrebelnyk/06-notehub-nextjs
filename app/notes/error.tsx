@@ -8,10 +8,8 @@ interface ErrorProps {
 export default function Error({ error, reset }: ErrorProps) {
   return (
     <div>
-      <h1>
-        <p>Could not fetch the list of notes. {error.message}</p>;
-      </h1>
-      <button onClick={() => window.location.reload()}>Reload</button>
+      <h1>Could not fetch the list of notes. {error.message};</h1>
+      <button onClick={() => reset()}>Reload</button>
     </div>
   );
 }

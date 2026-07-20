@@ -24,7 +24,7 @@ import NoteClient from './Notes.client';
 
 export default async function Notes() {
   const queryClient = new QueryClient();
-  const response = await queryClient.fetchQuery({
+  const response = await queryClient.prefetchQuery({
     queryKey: ['notes'],
     queryFn: () => fetchNotes(1, undefined),
   });
@@ -34,7 +34,7 @@ export default async function Notes() {
         {/* <Pagination totalPages={totalPages}
             currentPage={currentPage}
             onPageChange={setCurrentPage}> */}
-        <NoteClient notes={response.notes} />
+        <NoteClient />
       </HydrationBoundary>
     </>
   );

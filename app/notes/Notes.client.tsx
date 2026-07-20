@@ -1,23 +1,35 @@
 'use client';
 
-import { Note } from '@/types/note';
 import css from './Notes.client.module.css';
 import { fetchNotes } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
-import { useState } from 'react';
+
+import { MouseEventHandler, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import SearchBox from '../../components/SearchBox/SearchBox';
 import Pagination from '../../components/Pagination/Pagination';
 import NoteList from '@/components/NoteList/NoteList';
+import Modal from '@/components/Modal/Modal';
+import NoteForm from '@/components/NoteForm/NoteForm';
 
-interface NoteClientProps {
-  notes: Note[];
-}
-export default function NoteClient({ notes }: NoteClientProps) {
+// interface NoteClientProps {
+//   notes: Note[];
+// }
+export default function NoteClient() {
   const [search, setSearch] = useState<string | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
   //   const queryClient = useQueryClient();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleCreate: MouseEventHandler<HTMLButtonElement> = () => {
+    setIsModalOpen(true);
+  };
+
+  // const handleCloseModal = () => {
+  //   setIsModalOpen(false);
+  // };
+
+  const closeModal = () => setIsModalOpen(false);
 
   const handleSearch = useDebouncedCallback((search: string) => {
     setSearch(search);
@@ -65,11 +77,17 @@ export default function NoteClient({ notes }: NoteClientProps) {
             onPageChange={setCurrentPage}
           />
         )}
-        <Link href="/notes/createNote">
-          <button className={css.button}>Create note +</button>
-        </Link>
+
+        <button className={css.button} onClick={handleCreate}>
+          Create note +
+        </button>
       </div>
       {isSuccess && data && <NoteList notes={data.notes} />}
+      {isModalOpen && (
+        <Modal onClose={closeModal}>
+          <NoteForm onSuccess={closeModal} />
+        </Modal>
+      )}
     </div>
   );
 }
