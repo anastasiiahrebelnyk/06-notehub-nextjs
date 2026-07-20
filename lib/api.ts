@@ -52,7 +52,7 @@ export const fetchNoteById = async (id: Note['id']): Promise<Note> => {
 };
 
 export const createNote = async (values: NoteFormValues): Promise<Note> => {
-  const { data } = await axios.post<Note>('/notes', values, {
+  const { data } = await API.post<Note>('/notes', values, {
     headers: {
       Authorization: `Bearer ${API_KEY}`,
     },
@@ -61,7 +61,7 @@ export const createNote = async (values: NoteFormValues): Promise<Note> => {
 };
 
 export const deleteNote = async (noteId: Note['id']): Promise<Note> => {
-  const { data } = await axios.delete<Note>(`/notes/${noteId}`, {
+  const { data } = await API.delete<Note>(`/notes/${noteId}`, {
     headers: {
       Authorization: `Bearer ${API_KEY}`,
     },
