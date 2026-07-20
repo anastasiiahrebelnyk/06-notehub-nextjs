@@ -10,9 +10,9 @@ import * as Yup from 'yup';
 import { createNote } from '@/lib/api';
 import Link from 'next/link';
 
-interface NoteFormClientProps {
-  onSuccess: () => void;
-}
+// interface NoteFormClientProps {
+//   onSuccess: () => void;
+// }
 
 const initialValues: NoteFormValues = {
   title: '',
@@ -20,7 +20,7 @@ const initialValues: NoteFormValues = {
   tag: 'Todo',
 };
 
-export default function NoteFormClient({ onSuccess }: NoteFormClientProps) {
+export default function NoteFormClient() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const fieldId = useId();
@@ -112,7 +112,6 @@ export default function NoteFormClient({ onSuccess }: NoteFormClientProps) {
             type="submit"
             className={css.submitButton}
             disabled={createNoteM.isPending}
-            // onSuccess={handleSubmit}
           >
             Create Note
           </button>

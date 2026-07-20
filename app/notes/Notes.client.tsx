@@ -66,7 +66,7 @@ export default function NoteClient({ notes }: NoteClientProps) {
           />
         )}
         <Link href="/notes/createNote">
-          <button className={css.link}>Create note +</button>
+          <button className={css.button}>Create note +</button>
         </Link>
       </div>
       {isSuccess && data && <NoteList notes={data.notes} />}
