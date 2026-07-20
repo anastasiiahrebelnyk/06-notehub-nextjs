@@ -1,42 +1,42 @@
-'use client';
-import { fetchNoteById } from '@/lib/api';
+import { createPortal } from 'react-dom';
+
 import css from './Modal.module.css';
-import { useQuery } from '@tanstack/react-query';
-// import { useState } from 'react';
+import { useEffect } from 'react';
 
-import { useParams } from 'next/navigation';
+interface ModalProps {
+  onClose: () => void;
+  children: React.ReactNode;
+}
 
-export default function NoteDetailsClient() {
-  const { id } = useParams<{ id: string }>();
-  //   const [isEdit, setIsEdit] = useState<boolean>(false);
+export default function Modal({ onClose, children }: ModalProps) {
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      onClose();
+    }
+  };
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
 
-  const noteQ = useQuery({
-    queryKey: ['note', id],
-    queryFn: () => fetchNoteById(id),
-    refetchOnMount: false,
-  });
-  //   const toggleEdit = () => {
-  //     setIsEdit(prevIsEdit => !prevIsEdit);
-  //   };
-
-  return (
-    <>
-      {noteQ.isLoading && <p>Loading, please wait...</p>}
-      {noteQ.isError && !noteQ && <p>Something went wrong.</p>}
-      {noteQ.isSuccess && (
-        <main className={css.main}>
-          <div className={css.container}>
-            <div className={css.item}>
-              <div className={css.header}>
-                <h2>{noteQ.data?.title}</h2>
-              </div>
-              <p className={css.tag}>{noteQ.data?.tag}</p>
-              <p className={css.content}>{noteQ.data?.content}</p>
-              <p className={css.date}>{noteQ.data?.createdAt}</p>
-            </div>
-          </div>
-        </main>
-      )}
-    </>
+  return createPortal(
+    <div
+      className={css.backdrop}
+      role="dialog"
+      aria-modal="true"
+      onClick={handleBackdropClick}
+    >
+      <div className={css.modal}>{children}</div>
+    </div>,
+    document.body
   );
 }

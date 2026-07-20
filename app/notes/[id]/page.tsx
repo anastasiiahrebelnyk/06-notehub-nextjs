@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 
 import { fetchNoteById } from '@/lib/api';
-import NoteDetailsClient from '@/components/Modal/Modal';
+import NoteDetailsClient from './NoteDetails.client';
 
 interface NoteProps {
   params: Promise<{ id: string }>;

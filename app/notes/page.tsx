@@ -1,5 +1,5 @@
 // import NoteList from '@/app/notes/Notes.client';
-import NoteList from '@/components/NoteList/NoteList';
+
 import { fetchNotes } from '@/lib/api';
 
 import {
@@ -7,6 +7,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
+import NoteClient from './Notes.client';
 
 // interface NoteProps {
 //   page: number;
@@ -33,7 +34,7 @@ export default async function Notes() {
         {/* <Pagination totalPages={totalPages}
             currentPage={currentPage}
             onPageChange={setCurrentPage}> */}
-        <NoteList notes={response.notes} />
+        <NoteClient notes={response.notes} />
       </HydrationBoundary>
     </>
   );
