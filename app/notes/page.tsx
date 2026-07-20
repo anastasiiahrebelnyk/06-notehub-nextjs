@@ -1,6 +1,6 @@
-import NoteList from '@/app/notes/Notes.client';
+// import NoteList from '@/app/notes/Notes.client';
+import NoteList from '@/components/NoteList/NoteList';
 import { fetchNotes } from '@/lib/api';
-import { Note } from '@/types/note';
 
 import {
   dehydrate,
