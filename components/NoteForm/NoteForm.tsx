@@ -7,7 +7,6 @@ import type { NoteFormValues } from '../../types/note';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import * as Yup from 'yup';
 import { createNote } from '@/lib/api';
-import Link from 'next/link';
 
 interface NoteFormProps {
   onSuccess: () => void;
@@ -29,7 +28,9 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
       .max(50, 'Title is too long')
       .required('Title is required'),
     content: Yup.string().max(500, 'Content is too long'),
-    tag: Yup.string<'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping'>(),
+    tag: Yup.string()
+      .oneOf(['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'], 'Todo')
+      .required(),
   });
 
   const createNoteM = useMutation({
@@ -68,7 +69,7 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
             name="title"
             className={css.input}
           />
-          <ErrorMessage name="title" className={css.error} />
+          <ErrorMessage name="title" component="div" className={css.error} />
         </div>
 
         <div className={css.formGroup}>
@@ -80,7 +81,7 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
             rows={8}
             className={css.textarea}
           />
-          <ErrorMessage name="content" className={css.error} />
+          <ErrorMessage name="content" component="div" className={css.error} />
         </div>
 
         <div className={css.formGroup}>
@@ -97,7 +98,7 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
             <option value="Meeting">Meeting</option>
             <option value="Shopping">Shopping</option>
           </Field>
-          <ErrorMessage name="tag" className={css.error} />
+          <ErrorMessage name="tag" component="div" className={css.error} />
         </div>
 
         <div className={css.actions}>

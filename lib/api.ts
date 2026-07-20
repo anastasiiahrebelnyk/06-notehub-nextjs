@@ -3,9 +3,6 @@ import axios from 'axios';
 
 const API_KEY = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
-// const API_KEY =
-//   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuYXN0YXNpaWFocmViZWxueWtAZ21haWwuY29tIiwiaWF0IjoxNzgzMTUwNzk5fQ.bZpsdsSMpdBCX7K3XNH65hlfOuhkz-UlUKccFtAr5qg';
-
 export interface NoteHTTPResponse {
   notes: Note[];
   totalPages: number;
@@ -29,18 +26,6 @@ export const fetchNotes = async (
   });
   return res.data;
 };
-
-// export const fetchNotes = async (): Promise<NoteHTTPResponse> => {
-//   const res = await API.get<NoteHTTPResponse>('/notes', {
-//     params: {
-//       perPage: 12,
-//     },
-//     headers: {
-//       Authorization: `Bearer ${API_KEY}`,
-//     },
-//   });
-//   return res.data;
-// };
 
 export const fetchNoteById = async (id: Note['id']): Promise<Note> => {
   const res = await API.get<Note>(`/notes/${id}`, {

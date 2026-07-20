@@ -15,7 +15,7 @@ export default function Error({ error, reset }: ErrorProps) {
         </p>
         ;
       </h1>
-      <button onClick={() => window.location.reload()}>Reload</button>
+      <button onClick={() => reset()}>Reload</button>
     </div>
   );
 }
