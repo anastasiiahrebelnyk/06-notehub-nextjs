@@ -38,6 +38,7 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
     onSuccess: data => {
       console.log(data);
       queryClient.invalidateQueries({ queryKey: ['notes'] });
+      onSuccess();
     },
     onError: error => {
       console.log(error);
@@ -51,7 +52,6 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
     console.log(values);
     createNoteM.mutate(values);
     actions.resetForm();
-    onSuccess();
   };
 
   return (
